@@ -16,7 +16,7 @@ const Navbar = ({ session }: Props) => {
   const [open, setIsOpen] = useState<boolean>(false);
 
   return (
-    <>
+    <div>
       <Button
         data-drawer-target='default-sidebar'
         data-drawer-toggle='default-sidebar'
@@ -85,7 +85,7 @@ const Navbar = ({ session }: Props) => {
           onClick={() => setIsOpen(false)}
         ></div>
       )}
-    </>
+    </div>
   );
 };
 

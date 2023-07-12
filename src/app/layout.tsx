@@ -32,7 +32,7 @@ export default async function RootLayout({
       <body className='grid min-h-screen pt-4 antialiased md:grid-cols-sidebar bg-slate-50'>
         <Providers>
           <Navbar session={session} />
-          <div className='grid grid-cols-3'>{children}</div>
+          <div className=''>{children}</div>
         </Providers>
         <Toaster />
       </body>
