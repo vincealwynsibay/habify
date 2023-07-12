@@ -1,6 +1,7 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import { NextAuthOptions } from 'next-auth';
+import { NextAuthOptions, getServerSession } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
+import GithubProvider from 'next-auth/providers/github';
 import { db } from './db';
 import { nanoid } from 'nanoid';
 
@@ -17,6 +18,10 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_SECRET!,
     }),
+    GithubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+    }),
   ],
   callbacks: {
     async session({ token, session }) {
@@ -31,12 +36,16 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
 
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       const dbUser = await db.user.findFirst({
         where: {
           email: token.email,
         },
       });
+
+      if (account) {
+        token.accessToken = account.access_token;
+      }
 
       if (!dbUser) {
         token.id = user!.id;
@@ -46,7 +55,7 @@ export const authOptions: NextAuthOptions = {
       if (!dbUser.username) {
         await db.user.update({
           where: {
-            id: db.user.id,
+            id: dbUser.id,
           },
           data: {
             username: nanoid(10),
@@ -67,3 +76,5 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
+
+export const getAuthSession = () => getServerSession();

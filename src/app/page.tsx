@@ -1,3 +1,4 @@
+import { getAuthSession } from '@/lib/auth';
 import Image from 'next/image';
 
 export default function Home() {
