@@ -11,6 +11,37 @@ datasource db {
   relationMode = "prisma"
 }
 
+enum Status {
+  INCOMPLETE
+  CHECK
+  FAIL
+  SKIP
+}
+
+enum Timeframe {
+  HOUR
+  DAY
+  WEEK
+  MONTH
+}
+
+enum DayEnum {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+enum TimeOfDay {
+  ANY
+  MORNING
+  AFTERNOON
+  NIGHT
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -47,4 +78,47 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  habits        Habit[]
+}
+
+model Area {
+  id     String  @id @default(cuid())
+  title  String
+  habits Habit[]
+}
+
+model Habit {
+  id         String    @id @default(cuid())
+  title      String
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  target     Int
+  timeframe  Timeframe
+  frequency  String
+  status     Status
+  days       Day[]
+  timeOfDay  TimeOfDay
+  streak     History[]
+
+  Area   Area?   @relation(fields: [areaId], references: [id])
+  areaId String?
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+}
+
+model Day {
+  id      String  @id @default(cuid())
+  name    DayEnum
+  Habit   Habit?  @relation(fields: [habitId], references: [id])
+  habitId String?
+}
+
+model History {
+  id         String   @id @default(cuid())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  status     Status
+  Habit      Habit?   @relation(fields: [habitId], references: [id])
+  habitId    String?
 }
