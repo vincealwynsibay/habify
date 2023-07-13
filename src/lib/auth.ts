@@ -26,7 +26,6 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ token, session }) {
       if (token) {
-        console.log('token', token);
         session.user.id = token.id;
         session.user.name = token.name;
         session.user.email = token.email;
@@ -83,7 +82,7 @@ export const authOptions: NextAuthOptions = {
       };
     },
     redirect() {
-      return '/';
+      return '/journal/all-habits';
     },
   },
 };

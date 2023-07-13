@@ -53,30 +53,35 @@ const Navbar = ({ session }: Props) => {
             !session && 'flex flex-col justify-between'
           )}
         >
-          {session?.user && (
-            <UserAccountNav className='px-1 py-2 ' user={session.user} />
-          )}
-          <Link
-            href='/'
-            className='flex items-center gap-2 px-1 py-2 rounded-sm hover:bg-gray-100'
-          >
-            <Package />
-            <p className='block text-sm font-medium'>Habify</p>
-          </Link>
-          <div className='flex gap-2 justify-self-end'>
+          <div>
+            {session?.user && (
+              <UserAccountNav className='px-1 py-2 ' user={session.user} />
+            )}
+
             <Link
-              href='/sign-in'
-              className={buttonVariants({ variant: 'default' })}
+              href='/'
+              className='flex items-center gap-2 px-1 py-2 rounded-sm hover:bg-gray-100'
             >
-              <p className='block text-sm font-medium'>Sign In</p>
-            </Link>
-            <Link
-              href='/sign-up'
-              className={buttonVariants({ variant: 'outline' })}
-            >
-              <p className='block text-sm font-medium'>Sign Up</p>
+              <Package />
+              <p className='block text-sm font-medium'>Habify</p>
             </Link>
           </div>
+          {!session?.user && (
+            <div className='flex gap-2 justify-self-end'>
+              <Link
+                href='/sign-in'
+                className={buttonVariants({ variant: 'default' })}
+              >
+                <p className='block text-sm font-medium'>Sign In</p>
+              </Link>
+              <Link
+                href='/sign-up'
+                className={buttonVariants({ variant: 'outline' })}
+              >
+                <p className='block text-sm font-medium'>Sign Up</p>
+              </Link>
+            </div>
+          )}
         </div>
       </aside>
       {open && (

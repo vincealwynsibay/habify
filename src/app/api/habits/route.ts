@@ -2,12 +2,11 @@ import { authOptions, getAuthSession } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { HabitValidator } from '@/lib/validations/habit';
 import { History } from '@prisma/client';
-import { getServerSession } from 'next-auth';
 import { ZodError } from 'zod';
 
 export async function POST(req: Request) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getAuthSession();
 
     if (!session?.user) {
       throw new Response('Unauthorized', { status: 401 });
@@ -17,8 +16,25 @@ export async function POST(req: Request) {
 
     const { title, frequency, target, timeOfDay, timeframe } =
       HabitValidator.parse(body);
-    console.log({ title, frequency, target, timeOfDay, timeframe });
-    console.log('session1', session.user);
+
+    let area = await db.area.findFirst({
+      where: {
+        userId: session.user.id,
+        title: 'All Habits',
+      },
+    });
+
+    if (!area) {
+      area = await db.area.create({
+        data: {
+          userId: session.user.id,
+          title: 'All Habits',
+        },
+      });
+    }
+
+    if (!area) {
+    }
 
     const habit = await db.habit.create({
       data: {
@@ -28,6 +44,7 @@ export async function POST(req: Request) {
         timeOfDay,
         timeframe,
         userId: session.user.id,
+        areaId: area.id,
       },
     });
 
