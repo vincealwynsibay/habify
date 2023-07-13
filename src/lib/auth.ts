@@ -26,6 +26,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ token, session }) {
       if (token) {
+        console.log('token', token);
         session.user.id = token.id;
         session.user.name = token.name;
         session.user.email = token.email;
@@ -41,15 +42,25 @@ export const authOptions: NextAuthOptions = {
         where: {
           email: token.email,
         },
+        include: {
+          areas: true,
+        },
       });
-
-      if (account) {
-        token.accessToken = account.access_token;
-      }
 
       if (!dbUser) {
         token.id = user!.id;
         return token;
+      }
+
+      if (!dbUser.areas.length) {
+        const newArea = await db.area.create({
+          data: {
+            title: 'All Habits',
+            userId: dbUser.id,
+          },
+        });
+
+        await dbUser.areas.push(newArea);
       }
 
       if (!dbUser.username) {
