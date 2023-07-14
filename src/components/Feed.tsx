@@ -1,27 +1,13 @@
-import { getAuthSession } from '@/lib/auth';
-import { db } from '@/lib/db';
-import { useQuery } from '@tanstack/react-query';
-import { redirect } from 'next/navigation';
 import React from 'react';
 import { Separator } from '@/components/ui/Separator';
 import HabitItem from './HabitItem';
-import { useSession } from 'next-auth/react';
+import { Habit } from '@prisma/client';
 
-type Props = {};
+type Props = {
+  habits: Habit[];
+};
 
-const Feed = async (props: Props) => {
-  const session = await getAuthSession();
-
-  if (!session) {
-    redirect('/sign-in');
-  }
-
-  const habits = await db.habit.findMany({
-    where: {
-      userId: session.user.id,
-    },
-  });
-
+const Feed = ({ habits }: Props) => {
   return (
     <div className='container max-w-7xl'>
       {habits?.length ? (

@@ -2,13 +2,31 @@ import React from 'react';
 import Feed from '@/components/Feed';
 import HabitForm from '@/components/HabitForm';
 
+import { db } from '@/lib/db';
+import { getAuthSession } from '@/lib/auth';
+import { redirect } from 'next/navigation';
+import HabitFormDialogCustom from '@/components/HabitFormDialogCustom';
+
 type Props = {};
 
-const page = (props: Props) => {
+const page = async (props: Props) => {
+  const session = await getAuthSession();
+
+  if (!session) {
+    redirect('/sign-in');
+  }
+
+  const habits = await db.habit.findMany({
+    where: {
+      userId: session.user.id,
+    },
+  });
+
   return (
     <div>
+      {/* <HabitFormDialogCustom /> */}
       <HabitForm />
-      <Feed />
+      <Feed habits={habits} />
     </div>
   );
 };

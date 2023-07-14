@@ -1,6 +1,6 @@
 import { authOptions, getAuthSession } from '@/lib/auth';
 import { db } from '@/lib/db';
-import { HabitValidator } from '@/lib/validations/habit';
+import { HabitStatusValidator, HabitValidator } from '@/lib/validations/habit';
 import { History } from '@prisma/client';
 import { ZodError } from 'zod';
 
@@ -33,9 +33,6 @@ export async function POST(req: Request) {
       });
     }
 
-    if (!area) {
-    }
-
     const habit = await db.habit.create({
       data: {
         title,
@@ -56,5 +53,35 @@ export async function POST(req: Request) {
 
     console.log('error', error);
     return new Response('Could not create habit', { status: 500 });
+  }
+}
+
+export async function PATCH(req: Request) {
+  try {
+    const session = await getAuthSession();
+
+    if (!session?.user) {
+      return new Response('Unauthorized', { status: 401 });
+    }
+
+    const body = await req.json();
+    const { status, id } = HabitStatusValidator.parse(body);
+
+    await db.habit.update({
+      where: {
+        id,
+      },
+      data: {
+        status,
+      },
+    });
+
+    return new Response(status);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return new Response(error.message, { status: 422 });
+    }
+
+    return new Response('Could not update habit', { status: 500 });
   }
 }

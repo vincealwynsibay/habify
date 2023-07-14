@@ -11,6 +11,9 @@ export const Frequency = z.enum([
   'SATURDAY',
   'SUNDAY',
 ]);
+
+export const Status = z.enum(['INCOMPLETE', 'CHECK', 'FAIL', 'SKIP']);
+
 export const TimeOfDay = z.enum(['ANY', 'MORNING', 'AFTERNOON', 'NIGHT']);
 
 export const HabitValidator = z.object({
@@ -23,3 +26,10 @@ export const HabitValidator = z.object({
 
 export type HabitFormationPayload = z.infer<typeof HabitValidator>;
 export type HabitFormationFormData = z.infer<typeof HabitValidator>;
+
+export const HabitStatusValidator = z.object({
+  id: z.string(),
+  status: Status,
+});
+
+export type HabitUpdateStatusPayload = z.infer<typeof HabitStatusValidator>;
