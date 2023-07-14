@@ -21,14 +21,10 @@ const HabitItem = ({ habit }: Props) => {
       <p className='font-bold'>{habit.title}</p>
       <div className='flex items-center justify-between '>
         {habit.status === 'INCOMPLETE' && (
-          <StatusUpdateButton
-            className='flex gap-2'
-            size='sm'
-            variant={'outline'}
-            habitId={habit.id}
-            status='CHECK'
-          >
-            <Check /> Done
+          <StatusUpdateButton habitId={habit.id} status='CHECK'>
+            <Button className='flex gap-2' size='sm' variant={'outline'}>
+              <Check /> Done
+            </Button>
           </StatusUpdateButton>
         )}
         <DropdownMenu>
@@ -37,16 +33,34 @@ const HabitItem = ({ habit }: Props) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className='flex gap-2 cursor-pointer'>
-              <Check /> Check In
+            <DropdownMenuItem>
+              <StatusUpdateButton
+                className='flex gap-2 cursor-pointer'
+                habitId={habit.id}
+                status='CHECK'
+              >
+                <Check /> Check In
+              </StatusUpdateButton>
             </DropdownMenuItem>
-            <DropdownMenuItem className='flex gap-2 cursor-pointer'>
-              <ArrowRight />
-              Skip
+            <DropdownMenuItem>
+              <StatusUpdateButton
+                className='flex gap-2 cursor-pointer'
+                habitId={habit.id}
+                status='SKIP'
+              >
+                <ArrowRight />
+                Skip
+              </StatusUpdateButton>
             </DropdownMenuItem>
-            <DropdownMenuItem className='flex gap-2 cursor-pointer'>
-              <X />
-              Fail
+            <DropdownMenuItem>
+              <StatusUpdateButton
+                className='flex gap-2 cursor-pointer'
+                habitId={habit.id}
+                status='FAIL'
+              >
+                <X />
+                Fail
+              </StatusUpdateButton>
             </DropdownMenuItem>
             <DropdownMenuItem className='flex gap-2 cursor-pointer'>
               <Pen />

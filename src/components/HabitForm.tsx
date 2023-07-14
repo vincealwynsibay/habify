@@ -53,6 +53,7 @@ const frequencies = [
 ];
 
 const HabitForm = (props: Props) => {
+  const [isShow, setIsShow] = useState<boolean>(false);
   const router = useRouter();
 
   const form = useForm<HabitFormationFormData>({
@@ -127,18 +128,25 @@ const HabitForm = (props: Props) => {
       frequency: data.frequency,
       timeOfDay: data.timeOfDay,
     };
+    form.reset();
+    setIsShow(false);
+
     await addHabit(payload);
   };
 
   return (
-    <Dialog>
+    <Dialog
+      defaultOpen={false}
+      open={isShow}
+      onOpenChange={() => setIsShow(true)}
+    >
       <DialogTrigger asChild>
         <Button>
           <Plus />
           <p>Add Habit</p>
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className='h-fit'>
         <DialogHeader>
           <DialogTitle>Are you sure absolutely sure?</DialogTitle>
           <DialogDescription>
@@ -161,114 +169,118 @@ const HabitForm = (props: Props) => {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name='target'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Target</FormLabel>
-                  <FormControl>
-                    <Input type='number' {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+            <div className='flex justify-between items-center'>
+              <FormField
+                control={form.control}
+                name='target'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Target</FormLabel>
+                    <FormControl>
+                      <Input type='number' {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name='timeframe'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Timeframe</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={(value) =>
-                        field.onChange(Timeframe.parse(value))
-                      }
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger className='w-[180px]'>
-                        <SelectValue placeholder='Per day' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {timeframes.map((timeframe, idx) => {
-                          return (
-                            <SelectItem value={timeframe} key={idx}>
-                              Per{' '}
-                              {timeframe.slice(0, 1) +
-                                timeframe.slice(1).toLowerCase()}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name='timeframe'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Timeframe</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={(value) =>
+                          field.onChange(Timeframe.parse(value))
+                        }
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className='w-[180px]'>
+                          <SelectValue placeholder='Per day' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {timeframes.map((timeframe, idx) => {
+                            return (
+                              <SelectItem value={timeframe} key={idx}>
+                                Per{' '}
+                                {timeframe.slice(0, 1) +
+                                  timeframe.slice(1).toLowerCase()}
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
 
-            <FormField
-              control={form.control}
-              name='frequency'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Frequency</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={(value: string) =>
-                        field.onChange(Frequency.parse(value))
-                      }
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger className='w-[180px]'>
-                        <SelectValue placeholder='Per day' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {frequencies.map((frequency, idx) => {
-                          return (
-                            <SelectItem value={frequency} key={idx}>
-                              {frequency.slice(0, 1) +
-                                frequency.slice(1).toLowerCase()}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+            <div className='flex justify-between items-center'>
+              <FormField
+                control={form.control}
+                name='frequency'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Frequency</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={(value: string) =>
+                          field.onChange(Frequency.parse(value))
+                        }
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className='w-[180px]'>
+                          <SelectValue placeholder='Per day' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {frequencies.map((frequency, idx) => {
+                            return (
+                              <SelectItem value={frequency} key={idx}>
+                                {frequency.slice(0, 1) +
+                                  frequency.slice(1).toLowerCase()}
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name='timeOfDay'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Time of Day</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={(value: string) =>
-                        field.onChange(TimeOfDay.parse(value))
-                      }
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger className='w-[180px]'>
-                        <SelectValue placeholder='All Day' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {timeOfDays.map((time, idx) => {
-                          return (
-                            <SelectItem value={time} key={idx}>
-                              {time.slice(0, 1) + time.slice(1).toLowerCase()}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name='timeOfDay'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Time of Day</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={(value: string) =>
+                          field.onChange(TimeOfDay.parse(value))
+                        }
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className='w-[180px]'>
+                          <SelectValue placeholder='All Day' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {timeOfDays.map((time, idx) => {
+                            return (
+                              <SelectItem value={time} key={idx}>
+                                {time.slice(0, 1) + time.slice(1).toLowerCase()}
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <Button type='submit'>Submit</Button>
           </form>

@@ -9,7 +9,7 @@ import { HabitUpdateStatusPayload } from '@/lib/validations/habit';
 import { useRouter } from 'next/navigation';
 import { toast } from '@/hooks/use-toast';
 
-interface Props extends ButtonProps {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   habitId: string;
   status: Status;
@@ -61,9 +61,9 @@ const StatusUpdateButton = ({ children, habitId, status, ...props }: Props) => {
   });
 
   return (
-    <Button onClick={() => updateButton()} {...props}>
+    <div {...props} onClick={() => updateButton()}>
       {children}
-    </Button>
+    </div>
   );
 };
 
