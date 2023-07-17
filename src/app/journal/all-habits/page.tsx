@@ -20,7 +20,13 @@ const page = async (props: Props) => {
     where: {
       userId: session.user.id,
     },
+    include: {
+      streak: true,
+    },
   });
+
+  console.log(habits);
+  console.log(habits[0].streak)
 
   return (
     <div>

@@ -111,14 +111,14 @@ model Habit {
   frequency  Frequency
   status     Status?   @default(INCOMPLETE)
   timeOfDay  TimeOfDay
-  streak     History[]
 
   Area   Area?   @relation(fields: [areaId], references: [id])
   areaId String?
 
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-  Day    Day[]
+  user    User      @relation(fields: [userId], references: [id])
+  userId  String
+  Day     Day[]
+  History History[]
 }
 
 model Day {

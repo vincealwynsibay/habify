@@ -51,7 +51,6 @@ export async function POST(req: Request) {
       return new Response(error.message, { status: 422 });
     }
 
-    console.log('error', error);
     return new Response('Could not create habit', { status: 500 });
   }
 }
@@ -67,7 +66,7 @@ export async function PATCH(req: Request) {
     const body = await req.json();
     const { status, id } = HabitStatusValidator.parse(body);
 
-    await db.habit.update({
+    const habit = await db.habit.update({
       where: {
         id,
       },
@@ -75,6 +74,41 @@ export async function PATCH(req: Request) {
         status,
       },
     });
+
+    console.log(habit);
+
+    if (!habit) {
+      return new Response('Habit not found.', { status: 404 });
+    }
+
+    // Update history
+    if (status !== 'INCOMPLETE') {
+      await db.history.create({
+        data: {
+          habitId: habit.id,
+          status: habit.status!,
+        },
+      });
+    } else {
+      const history = await db.history.findFirst({
+        where: {
+          habitId: habit.id,
+        },
+      });
+
+      console.log(history);
+
+      if (!history) {
+        return new Response('History not found.', { status: 404 });
+      }
+
+      await db.history.delete({
+        where: {
+          id: history!.id,
+          habitId: habit.id,
+        },
+      });
+    }
 
     return new Response(status);
   } catch (error) {
