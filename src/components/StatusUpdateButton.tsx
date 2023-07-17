@@ -4,7 +4,6 @@ import React from 'react';
 import { Status } from '@prisma/client';
 import { useMutation } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
-import { Button, ButtonProps } from './ui/Button';
 import { HabitUpdateStatusPayload } from '@/lib/validations/habit';
 import { useRouter } from 'next/navigation';
 import { toast } from '@/hooks/use-toast';

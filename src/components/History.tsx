@@ -1,6 +1,6 @@
 'use client';
 
-import { Habit } from '@prisma/client';
+import { Habit, Prisma } from '@prisma/client';
 import React, { useEffect } from 'react';
 import HabitItem from './HabitItem';
 import { Separator } from './ui/Separator';
@@ -12,7 +12,11 @@ import {
 } from '@/components/ui/Accordion';
 
 type Props = {
-  habits: Habit[];
+  habits: Prisma.HabitGetPayload<{
+    include: {
+      streak: true;
+    };
+  }>[];
 };
 
 const History = ({ habits }: Props) => {

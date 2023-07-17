@@ -75,8 +75,6 @@ export async function PATCH(req: Request) {
       },
     });
 
-    console.log(habit);
-
     if (!habit) {
       return new Response('Habit not found.', { status: 404 });
     }
@@ -95,8 +93,6 @@ export async function PATCH(req: Request) {
           habitId: habit.id,
         },
       });
-
-      console.log(history);
 
       if (!history) {
         return new Response('History not found.', { status: 404 });

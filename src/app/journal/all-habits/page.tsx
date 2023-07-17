@@ -25,14 +25,15 @@ const page = async (props: Props) => {
     },
   });
 
-  console.log(habits);
-  console.log(habits[0].streak)
-
   return (
     <div>
       {/* <HabitFormDialogCustom /> */}
-      <HabitForm />
-      <Feed habits={habits} />
+      {session && (
+        <>
+          <HabitForm />
+          <Feed habits={habits} />
+        </>
+      )}
     </div>
   );
 };

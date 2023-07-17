@@ -1,5 +1,7 @@
 import { Habit, Prisma } from '@prisma/client';
-import HabitDetails from './HabitDetails';
+import HistoryDetails from './HistoryDetails';
+import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
+import HabitOptions from './HabitOptions';
 type Props = {
   habit: Prisma.HabitGetPayload<{
     include: {
@@ -10,40 +12,20 @@ type Props = {
 
 const HabitItem = async ({ habit }: Props) => {
   return (
-    <div>
-      <HabitDetails habit={habit} />
-      <div>
-        <p>
-          SUCCESS:{' '}
-          {habit.streak.reduce((count, history) => {
-            if (history.status === 'CHECK') {
-              return count + 1;
-            } else {
-              return count;
-            }
-          }, 0)}
-        </p>
-        <p>
-          FAIL:{' '}
-          {habit.streak.reduce((count, history) => {
-            if (history.status === 'FAIL') {
-              return count + 1;
-            } else {
-              return count;
-            }
-          }, 0)}
-        </p>
-        <p>
-          SKIP:{' '}
-          {habit.streak.reduce((count, history) => {
-            if (history.status === 'SKIP') {
-              return count + 1;
-            } else {
-              return count;
-            }
-          }, 0)}
-        </p>
-      </div>
+    <div className=''>
+      <Sheet>
+        <div className='flex items-center justify-between py-4 cursor-pointer'>
+          <SheetTrigger>
+            <p className='font-bold'>{habit.title}</p>
+          </SheetTrigger>
+          <div className='flex items-center justify-between '>
+            <HabitOptions habit={habit} />
+          </div>
+        </div>
+        <SheetContent>
+          <HistoryDetails habit={habit} />
+        </SheetContent>
+      </Sheet>
     </div>
   );
 };
