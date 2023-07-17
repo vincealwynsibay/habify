@@ -19,20 +19,37 @@ const page = async (props: Props) => {
   const habits = await db.habit.findMany({
     where: {
       userId: session.user.id,
+      created_at: {
+        gte: new Date(new Date().toISOString().split('T')[0]),
+      },
     },
     include: {
       streak: true,
     },
   });
 
+  // TODO: REINITIALIZE HABITS BY 12:00 midnight
+  // TODO: FLUSH HABITS AND UPDATE STATUS TO INCOMPLETE
+  // SHOW TODAY HABITS ONLY
+
+  // await db.habit.deleteMany({
+  //   where: {
+  //     created_at: {
+  //       lt: new Date(new Date().toISOString().split('T')[0]),
+  //     },
+  //   },
+  // });
+
   return (
     <div>
-      {/* <HabitFormDialogCustom /> */}
+      <p></p>
+      //{' '}
       {session && (
-        <>
-          <HabitForm />
-          <Feed habits={habits} />
-        </>
+        //     <>
+        <HabitForm />
+        //       {/* <HabitFormDialogCustom /> */}
+        //       <Feed habits={habits} />
+        //     </>
       )}
     </div>
   );
