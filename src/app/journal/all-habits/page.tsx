@@ -11,8 +11,7 @@ type Props = {};
 
 const page = async (props: Props) => {
   const session = await getAuthSession();
-
-  if (!session) {
+   if (!session) 
     redirect('/sign-in');
   }
 
@@ -47,8 +46,8 @@ const page = async (props: Props) => {
       {session && (
         //     <>
         <HabitForm />
-        //       {/* <HabitFormDialogCustom /> */}
-        //       <Feed habits={habits} />
+                // <HabitFormDialogCustom /> 
+       <Feed habits={habits} />
         //     </>
       )}
     </div>
